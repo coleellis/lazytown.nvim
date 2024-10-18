@@ -44,11 +44,14 @@ return {
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
     },
-    opts = function()
+    opts = function(_, opts)
       vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
       local cmp = require "cmp"
       local defaults = require "cmp.config.default"()
       require("luasnip.loaders.from_vscode").lazy_load()
+
+      -- clangd
+      table.insert(opts.sorting.comparators, 1, require("clangd_extensions.cmp_sources"))
 
       return {
         auto_brackets = {},
