@@ -1,33 +1,33 @@
 return {
-{
-  "p00f/clangd_extensions.nvim",
-  lazy = true,
-  config = function() end,
-  opts = {
-    inlay_hints = {
-      inline = false,
-    },
-    ast = {
-      --These require codicons (https://github.com/microsoft/vscode-codicons)
-      role_icons = {
-        type = "",
-        declaration = "",
-        expression = "",
-        specifier = "",
-        statement = "",
-        ["template argument"] = "",
+  {
+    "p00f/clangd_extensions.nvim",
+    lazy = true,
+    config = function() end,
+    opts = {
+      inlay_hints = {
+        inline = false,
       },
-      kind_icons = {
-        Compound = "",
-        Recovery = "",
-        TranslationUnit = "",
-        PackExpansion = "",
-        TemplateTypeParm = "",
-        TemplateTemplateParm = "",
-        TemplateParamObject = "",
+      ast = {
+        --These require codicons (https://github.com/microsoft/vscode-codicons)
+        role_icons = {
+          type = "",
+          declaration = "",
+          expression = "",
+          specifier = "",
+          statement = "",
+          ["template argument"] = "",
+        },
+        kind_icons = {
+          Compound = "",
+          Recovery = "",
+          TranslationUnit = "",
+          PackExpansion = "",
+          TemplateTypeParm = "",
+          TemplateTemplateParm = "",
+          TemplateParamObject = "",
+        },
       },
     },
-  },
   },
   -- mason.nvim drives installation and management of Language Server
   -- Protocol (LSP) servers. LSP Servers are responsible for providing
@@ -37,9 +37,9 @@ return {
     "williamboman/mason.nvim",
     lazy = false,
     config = function()
-      require("mason").setup({
-          ensure_installed = { "codelldb" }
-      })
+      require("mason").setup {
+        ensure_installed = { "codelldb" },
+      }
     end,
   },
   -- mason-lspconfig.nvim is the bridge between mason.nvim and
@@ -90,30 +90,36 @@ return {
         cmd = { "asm-lsp" },
       }
       lspconfig.clangd.setup {
-          capabilities = capabilities,
-          filetypes = { "h", "c", "cpp", "objc", "objcpp" },
-          cmd = {
-              "clangd",
-              "--compile-commands-dir=cmake-build-debug",
-              "--background-index",
-              "--clang-tidy",
-              "--header-insertion=iwyu",
-              "--completion-style=detailed",
-              "--function-arg-placeholders",
-              "--fallback-style=llvm"
-          },
-          root_dir = lspconfig.util.root_pattern("CMakeLists.txt", ".git"),
-          init_options = {
-              usePlaceholders = true,
-              completeUnimported = true,
-              clangdFileStatus = true,
-              semanticHighlighting = true
-          },
-          flags = { debounce_text_changes = 150 },
-          on_attach = function()
-              require("clangd_extensions.inlay_hints").setup_autocmd()
-              require("clangd_extensions.inlay_hints").set_inlay_hints()
-          end,
+        capabilities = capabilities,
+        filetypes = { "h", "c", "cpp", "objc", "objcpp" },
+        cmd = {
+          "clangd",
+          "--compile-commands-dir=cmake-build-debug",
+          "--background-index",
+          "--clang-tidy",
+          "--header-insertion=iwyu",
+          "--completion-style=detailed",
+          "--function-arg-placeholders",
+          "--fallback-style=llvm",
+          "--log=verbose",
+        },
+        root_dir = function()
+          if vim.g.root then
+            return vim.g.root
+          end
+          return lspconfig.util.root_pattern("CMakeLists.txt", ".git")
+        end,
+        init_options = {
+          usePlaceholders = true,
+          completeUnimported = true,
+          clangdFileStatus = true,
+          semanticHighlighting = true,
+        },
+        flags = { debounce_text_changes = 150 },
+        on_attach = function()
+          require("clangd_extensions.inlay_hints").setup_autocmd()
+          require("clangd_extensions.inlay_hints").set_inlay_hints()
+        end,
       }
     end,
     keys = {
