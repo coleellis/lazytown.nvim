@@ -1,3 +1,7 @@
+<h3 align="center">Lazytown will soon be archived in favor of <a href="https://github.com/vim-universe/Uvim">Uvim</a>.</h2>
+
+<hr>
+
 <h1 align="center">LazyTown-nvim</h1>
 
 <div align="center">
